@@ -1,0 +1,7 @@
+# Exclude json, csv, and hdf5 files
+*.csv
+*.json
+*.hdf5
+
+# Exclude everything in the sampledata folder
+./sampledata/*
