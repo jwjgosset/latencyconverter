@@ -5,3 +5,4 @@
 
 # Exclude everything in the sampledata folder
 ./sampledata/*
+./sampledata/test/
