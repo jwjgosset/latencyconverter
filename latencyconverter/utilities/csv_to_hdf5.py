@@ -4,7 +4,7 @@ import h5py
 import datetime
 
 
-def loadcsv(
+def load_csv(
     source: str,
 ) -> DataFrame:
     '''
@@ -87,14 +87,7 @@ def main():
     This was meant for messing around with options to see what optimizes
     compression!
     '''
-    csvDF = loadcsv('../sampledata/QW_QCN08_9J_HNZ_2022_44.csv')
-    # writehdf5(csvDF, '../sampledata/QW_QCN08_9J_HNZ_2022_44.hd5')
-
-    # df2 = pd.read_hdf('../sampledata/QW_QCN08_9J_HNZ_2022_44.hd5',
-    #                   key='latency',
-    #                   mode='r',
-    #                   )
-    # print(df2)
+    csvDF = load_csv('../sampledata/QW_QCN08_9J_HNZ_2022_44.csv')
 
     csv_to_h5py('../sampledata/test/test.hdf5', csvDF)
 

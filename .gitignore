@@ -6,3 +6,7 @@
 # Exclude everything in the sampledata folder
 ./sampledata/*
 ./sampledata/test/
+
+# Exclude egg-info and build folders
+./build/*
+./.egg-info/*

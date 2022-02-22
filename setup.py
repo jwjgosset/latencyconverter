@@ -2,7 +2,7 @@ from setuptools import setup
 from setuptools import find_packages
 
 setup(
-    name='latencyfileconverter',
+    name='latencyconverter',
     version='0.1.0',
     description='Utility to convert latency information from csv(grlp) and \
                 json(nnm) formats to compressed hdf5 format for long-term \
@@ -19,6 +19,11 @@ setup(
             'pytest',
             'mypy',
             'flake8'
+        ]
+    },
+    entry_points={
+        'console_scripts': [
+            'lattohdf5 = latencyconverter.bin.lattohdf5: main'
         ]
     }
 )
