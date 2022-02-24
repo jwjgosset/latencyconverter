@@ -10,6 +10,21 @@ import datetime
 def load_json(
     source: str
 ) -> Dict:
+    '''
+    Attempts to load a json file, and validate that it is in the format of a
+    Nanometrics Apollo Server Availability API query.
+
+    Parameters
+    ----------
+
+    source: str
+        The path to the Nanometrics json file that should be loaded.
+
+    Returns
+    -------
+    Dict
+        Dictionary object containing the json format data.
+    '''
 
     # Open the json file and load it into a dictionary
     with open(source) as json_file:
@@ -17,17 +32,26 @@ def load_json(
     return availability
 
 
-def init_dataframe() -> pd.DataFrame:
-    latency_df = pd.DataFrame(columns=['channel', 'startTime', 'endTime',
-                                       'minLatency', 'maxLatency',
-                                       'avgLatency', 'allPackets',
-                                       'retxPackets'])
-    return latency_df
-
-
 def json_to_table(
     latency_dict: Dict
 ) -> pd.DataFrame:
+    '''
+    This function parses through json formatted data and extracts the values
+    that we wish to store, rearranging them into a pandas dataframe.
+
+    Parameters
+    ----------
+
+    latency_dict: Dict
+        Dictionary object containing json format availability information to
+        extract values from.
+
+    Returns
+    -------
+    DataFrame
+        Pandas dataframe object containing the values deemed important for
+        long term storage.
+    '''
 
     # Unpack the value of 'availability' because it should be the only key at
     # the highest level of the dictionary
@@ -49,16 +73,6 @@ def json_to_table(
         for interval_dict in channel_dict['intervals']:
 
             # Unpack all the values we want
-            '''
-            start_time = interval_dict['startTime']
-            end_time = interval_dict['endTime']
-            min_latency = interval_dict['latency']['minimum']
-            max_latency = interval_dict['latency']['maximum']
-            avg_latency = interval_dict['latency']['average']
-            all_packets = interval_dict['retx']['allPackets']
-            retx_packets = interval_dict['retx']['retxPackets']
-            '''
-
             df_dict['channel'].append(channel)
             df_dict['startTime'].append(interval_dict['startTime'])
             df_dict['endTime'].append(interval_dict['endTime'])
@@ -74,10 +88,24 @@ def json_to_table(
     return latency_df
 
 
-def json_to_hdf5(
+def json_to_h5py(
     filename: str,
     df: pd.DataFrame
 ):
+    '''
+    This function takes the latency data from a DataFrame and stores it as an
+    HDF5 file
+
+    Parameters
+    ----------
+
+    filename: Str
+        This is the location and filename to save the data in hdf5 format
+
+    df: DataFrame
+        Pandas DataFrame object containing data extracted from a
+        json-formatted Nanometrics Availability API query.
+    '''
     # Open the HDF5 file
     with h5py.File(filename, 'w') as hdf5file:
 
@@ -119,24 +147,16 @@ def json_to_hdf5(
                                          compression='gzip',
                                          compression_opts=9)
 
+            # Create a dataset for the number of samples in each packet
             if 'samples' in df:
                 channel_group.create_dataset(name='samples',
                                              data=df['samples'].tolist(),
                                              dtype='uint16')
+            # The Nanometrics Availability API doesn't return this value so
+            # generate an empty dataset
             else:
                 channel_group.create_dataset(name='samples', data=[],
                                              dtype='uint16')
-
-
-def writehdf5(
-    df: pd.DataFrame,
-    destination: str
-):
-    df.to_hdf(destination,
-              key='latency',
-              mode='w',
-              complevel=9,
-              format='table')
 
 
 def main():
@@ -144,12 +164,7 @@ def main():
 
     latency_df = json_to_table(availability)
 
-    json_to_hdf5('../sampledata/QW.QCC01.2022.044.hdf5', latency_df)
-
-    # df2 = pd.read_hdf('../sampledata/QW.QCC01.2022.044.hd5',
-    #                  key='latency',
-    #                  mode='r',
-    #                  )
+    json_to_h5py('../sampledata/QW.QCC01.2022.044.hdf5', latency_df)
 
 
 if __name__ == '__main__':

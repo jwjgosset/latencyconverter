@@ -49,7 +49,7 @@ def main():
         latency_df = latencyconverter.utilities.json_to_hdf5.json_to_table(
             availability)
 
-        latencyconverter.utilities.json_to_hdf5.json_to_hdf5(
+        latencyconverter.utilities.json_to_hdf5.json_to_h5py(
             '../sampledata/QW.QCC01.2022.044.hdf5', latency_df)
 
     else:

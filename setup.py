@@ -3,7 +3,7 @@ from setuptools import find_packages
 
 setup(
     name='latencyconverter',
-    version='0.1.0',
+    version='0.1.1',
     description='Utility to convert latency information from csv(grlp) and \
                 json(nnm) formats to compressed hdf5 format for long-term \
                 storage.',
@@ -23,7 +23,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'lattohdf5 = latencyconverter.bin.lattohdf5: main'
+            'lat_to_hdf5 = latencyconverter.bin.lat_to_hdf5: main'
         ]
     }
 )

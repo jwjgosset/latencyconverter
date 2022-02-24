@@ -8,27 +8,40 @@ def load_csv(
     source: str,
 ) -> DataFrame:
     '''
-    Function to load CSV file into dataframe
+    This function loads a CSV file of latency data from Guralp into a DataFrame
+
+    Parameters
+    ----------
+    source: Str
+        The path the CSV file to load
+
+    Returns
+    -------
+    DataFrame
+        A Pandas DataFrame containing the loaded latency information.
     '''
     csvDF = pd.read_csv(source)
     return csvDF
-
-
-def writehdf5(
-    df: DataFrame,
-    destination: str
-):
-    df.to_hdf(destination,
-              key='latency',
-              mode='w',
-              complevel=9,
-              format='table')
 
 
 def csv_to_h5py(
     filename: str,
     df: DataFrame
 ):
+    '''
+    This function takes the latency data from a DataFrame and stores it as an
+    HDF5 file
+
+    Parameters
+    ----------
+
+    filename: Str
+        This is the location and filename to save the data in hdf5 format
+
+    df: DataFrame
+        Pandas DataFrame object containing data extracted from a
+        json-formatted Nanometrics Availability API query.
+    '''
     # Open the HDF5 file
     with h5py.File(filename, 'w') as hdf5file:
 
