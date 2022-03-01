@@ -4,9 +4,9 @@
 *.hdf5
 
 # Exclude everything in the sampledata folder
-./sampledata/*
-./sampledata/test/
+sampledata/
+sampledata/test/
 
 # Exclude egg-info and build folders
-./build/*
-./.egg-info/*
+build/
+latencyconverter.egg-info/

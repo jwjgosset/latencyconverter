@@ -91,19 +91,20 @@ def csv_to_h5py(
                                          compression_opts=9)
 
 
-def main():
+def store_csv(
+    filename: str,
+    destination_dir: str
+):
     '''
-    THIS IS FOR TESTING ONLY.
+    This function loads a specified csv file, and then converts the data
+    inside to compressed hdf5 format for long term sorage.
 
-    This 'main' function converts sample csv data to HDF5
-
-    This was meant for messing around with options to see what optimizes
-    compression!
+    Parameters
+    ----------
+    filename: str
+        Path to the csv file to load and convert to hdf5 format.
+    destination_dir: str
+        The directory to store the compressed hdf5 files in.
     '''
-    csvDF = load_csv('../sampledata/QW_QCN08_9J_HNZ_2022_44.csv')
-
-    csv_to_h5py('../sampledata/test/test.hdf5', csvDF)
-
-
-if __name__ == '__main__':
-    main()
+    csvDF = load_csv(filename)
+    csv_to_h5py(f'{destination_dir}/{filename}.hdf5', csvDF)

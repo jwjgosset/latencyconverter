@@ -1,4 +1,20 @@
-#!/usr/bin/python3.8
+'''
+This module is used to store latency information from a Nanomatrics
+availability json file in a compressed hdf5 format.
+
+Functions
+---------
+
+load_json:
+    Loads a json file and returns its contents as a dictionary object.
+
+json_to_table:
+    
+
+json_to_hdf5:
+
+store_json:
+'''
 
 from typing import Dict
 import json
@@ -74,13 +90,8 @@ def json_to_table(
 
             # Unpack all the values we want
             df_dict['channel'].append(channel)
-            df_dict['startTime'].append(interval_dict['startTime'])
-            df_dict['endTime'].append(interval_dict['endTime'])
-            df_dict['minLatency'].append(interval_dict['latency']['minimum'])
-            df_dict['maxLatency'].append(interval_dict['latency']['maximum'])
-            df_dict['avgLatency'].append(interval_dict['latency']['average'])
-            df_dict['allPackets'].append(interval_dict['retx']['allPackets'])
-            df_dict['retxPackets'].append(interval_dict['retx']['retxPackets'])
+            df_dict['starttime'].append(interval_dict['startTime'])
+            df_dict['latency'].append(interval_dict['latency']['maximum'])
 
             df_index += 1
 
@@ -126,7 +137,7 @@ def json_to_h5py(
                                            dtype='uint16')
 
             # Convert the timestamps to unix timestamps
-            end_timestamps = channel_df['endTime'].tolist()
+            end_timestamps = channel_df['starttime'].tolist()
             end_timestamps = list(map(
                 lambda item: datetime.datetime.strptime(
                     item[:26], "%Y-%m-%dT%H:%M:%S.%f").timestamp(),
@@ -142,7 +153,7 @@ def json_to_h5py(
 
             # Create a compressed dataset for network latency
             channel_group.create_dataset(name='network latency',
-                                         data=df['avgLatency'].tolist(),
+                                         data=df['latency'].tolist(),
                                          dtype='int32',
                                          compression='gzip',
                                          compression_opts=9)
@@ -159,13 +170,25 @@ def json_to_h5py(
                                              dtype='uint16')
 
 
-def main():
-    availability = load_json('../sampledata/QW.QCC01.2022.044.json')
+def store_json(
+    filename: str,
+    destination_dir: str
+):
+    '''
+    This function loads a Nanometrics availability json file, extracts latency
+    information from it and stores it in a compressed hdf5 format.
+
+    Parameters
+    ----------
+
+    filename: str
+        The file to extract station latency information from.
+
+    destination_dir: str
+        The directory to store the compressed hdf5 file in.
+    '''
+    availability = load_json(filename)
 
     latency_df = json_to_table(availability)
 
-    json_to_h5py('../sampledata/QW.QCC01.2022.044.hdf5', latency_df)
-
-
-if __name__ == '__main__':
-    main()
+    json_to_h5py(f'{destination_dir}/{filename}.hdf5', latency_df)
