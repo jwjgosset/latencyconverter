@@ -9,11 +9,15 @@ load_json:
     Loads a json file and returns its contents as a dictionary object.
 
 json_to_table:
-    
+    This function parses through json formatted data and extracts the values
+    that we wish to store, rearranging them into a pandas dataframe.
 
 json_to_hdf5:
-
+    This function takes the latency data from a DataFrame and stores it as an
+    HDF5 file.
 store_json:
+    This function loads a Nanometrics availability json file, extracts latency
+    information from it and stores it in a compressed hdf5 format.
 '''
 
 from typing import Dict
