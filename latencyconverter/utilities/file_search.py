@@ -43,7 +43,7 @@ def get_date(
         return date.today() - timedelta(days=1)
     else:
         try:
-            selected_date = datetime.strptime(date_string, '%Y-%m-%d')
+            selected_date = datetime.strptime(date_string, '%Y-%m-%d').date()
         except ValueError as e:
             logging.error('Failed to convert date. Date must be in YYYY-MM-DD \
                           format.')

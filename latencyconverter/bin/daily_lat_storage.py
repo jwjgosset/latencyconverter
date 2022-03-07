@@ -13,6 +13,7 @@ usage: daily_lat_store [-h] [-t DATE] [-s SOURCE] -d DESTINATION
                         hdf5 files.
 '''
 
+import logging
 import argparse
 from latencyconverter.utilities.file_search import get_date, get_files
 from latencyconverter.utilities.bulk_store import bulk_store
@@ -44,7 +45,20 @@ def main():
         required=True,
         type=str
     )
+    argsparser.add_argument(
+        '-v',
+        '--verbose',
+        action='store_true',
+        help='Sets logging level to DEBUG.'
+    )
+
     args = argsparser.parse_args()
+
+    # Set logging parameters
+    logging.basicConfig(
+        format='%(asctime)s:%(levelname)s:%(message)s',
+        datefmt="%Y-%m-%d %H:%M:%S",
+        level=logging.DEBUG if args.verbose else logging.INFO)
 
     # Collect files that need to be stored in hdf5 format
     working_date = get_date(args.date)

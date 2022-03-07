@@ -11,7 +11,7 @@ usage: lat_to_hdf5 [-h] [-c CSV] [-j JSON] -d DESTINATION
                         Specify path to destination hdf5 file.
 
 '''
-
+import logging
 import argparse
 from latencyconverter.utilities.csv_to_hdf5 import store_csv
 from latencyconverter.utilities.json_to_hdf5 import store_json
@@ -47,9 +47,21 @@ def main():
         required=True,
         type=str
     )
+    argsparser.add_argument(
+        '-v',
+        '--verbose',
+        action='store_true',
+        help='Sets logging level to DEBUG.'
+    )
 
     # Parse the args!
     args = argsparser.parse_args()
+
+    # Set logging parameters
+    logging.basicConfig(
+        format='%(asctime)s:%(levelname)s:%(message)s',
+        datefmt="%Y-%m-%d %H:%M:%S",
+        level=logging.DEBUG if args.verbose else logging.INFO)
 
     # Fail if the user tried to specify two different source files
     if args.csv is not None and args.json is not None:
