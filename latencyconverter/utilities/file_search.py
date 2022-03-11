@@ -79,18 +79,19 @@ def get_files(
     files: list = []
 
     # Try to find csv files in the specified directory
-    cmd = f'ls {source}/{working_date.strftime("%Y-%m-%d")}/*.csv'
+    cmd = f'ls {source}/{working_date.strftime("%Y/%m/%d")}/*.csv 2>/dev/null'
     output: list = (subprocess.getoutput(cmd)).split('\n')
-    if output is not ['']:
+    print(output)
+    if '' not in output:
         files.extend(output)
         logging.info(f'{len(output)} csv files found.')
     else:
         logging.warning('No CSV files found.')
 
     # Try to find json files in the specified directory
-    cmd = f'ls {source}/{working_date.strftime("%Y-%m-%d")}/*.json'
+    cmd = f'ls {source}/{working_date.strftime("%Y/%m/%d")}/*.json 2>/dev/null'
     output = (subprocess.getoutput(cmd)).split('\n')
-    if output is not ['']:
+    if '' not in output:
         files.extend(output)
         logging.info(f'{len(output)} json files found.')
     else:
@@ -99,6 +100,6 @@ def get_files(
     # Raise an error if no files are loaded
     if len(files) == 0:
         raise FileNotFoundError(f'No csv or json files found in {source}/\
-                         {working_date.strftime("%Y-%m-%d")}/')
+                         {working_date.strftime("%Y/%m/%d")}/')
 
     return files

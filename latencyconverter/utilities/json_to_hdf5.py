@@ -49,6 +49,9 @@ def load_json(
     # Open the json file and load it into a dictionary
     with open(source) as json_file:
         availability = json.load(json_file)
+        if 'availability' not in availability:
+            raise ValueError(f'Invalid json file: {source} does not contain \
+                               availability information.')
     return availability
 
 
@@ -81,9 +84,7 @@ def json_to_table(
     df_index = 0
 
     # Initialize a table-format
-    df_dict: Dict = {'channel': [], 'startTime': [], 'endTime': [],
-                     'minLatency': [], 'maxLatency': [], 'avgLatency': [],
-                     'allPackets': [], 'retxPackets': []}
+    df_dict: Dict = {'channel': [], 'starttime': [], 'latency': []}
 
     # Loop through each channel in the list
     for channel_dict in latency_dict:

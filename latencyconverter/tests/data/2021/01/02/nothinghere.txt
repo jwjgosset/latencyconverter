@@ -1,0 +1,2 @@
+There are no csv or json files in this folder, so it should throw an 
+exception when get_files() looks in here for them during test_get_files()

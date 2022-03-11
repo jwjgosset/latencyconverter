@@ -21,6 +21,15 @@ setup(
             'flake8'
         ]
     },
+    package_data={
+        'latencyconverter.tests': [
+            'data/2021/01/01/*.json',
+            'data/2021/01/01/*.csv',
+            'data/2021/01/02/*.txt',
+            'data/2021/01/03/*.json'
+        ]
+    },
+
     entry_points={
         'console_scripts': [
             'lat_to_hdf5 = latencyconverter.bin.lat_to_hdf5: main',
