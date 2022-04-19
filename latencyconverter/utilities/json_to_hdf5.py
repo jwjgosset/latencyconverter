@@ -25,6 +25,7 @@ import json
 import pandas as pd
 import h5py
 import datetime
+import logging
 
 
 def load_json(
@@ -49,6 +50,7 @@ def load_json(
     # Open the json file and load it into a dictionary
     with open(source) as json_file:
         availability = json.load(json_file)
+
         if 'availability' not in availability:
             raise ValueError(f'Invalid json file: {source} does not contain \
                                availability information.')
@@ -192,8 +194,17 @@ def store_json(
     destination_dir: str
         The directory to store the compressed hdf5 file in.
     '''
-    availability = load_json(filename)
+    logging.debug(f'Loading {filename}')
 
-    latency_df = json_to_table(availability)
+    try:
+        availability = load_json(filename)
 
-    json_to_h5py(f'{destination_dir}/{filename}.hdf5', latency_df)
+        latency_df = json_to_table(availability)
+
+        file_name_parts = filename.split('/')
+        dest_file = f'{file_name_parts[len(file_name_parts) - 1]}.hdf5'
+        json_to_h5py(f'{destination_dir}/{dest_file}', latency_df)
+    except json.decoder.JSONDecodeError:
+        logging.error(f'Skipping invalid json file: {filename}')
+    except ValueError as e:
+        logging.error(f'Skipping {filename} due to ValueError: {e}')

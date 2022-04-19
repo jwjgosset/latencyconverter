@@ -17,6 +17,7 @@ import logging
 import argparse
 from latencyconverter.utilities.file_search import get_date, get_files
 from latencyconverter.utilities.bulk_store import bulk_store
+import os
 
 
 def main():
@@ -64,5 +65,11 @@ def main():
     working_date = get_date(args.date)
     files = get_files(working_date, args.source)
 
+    # Create subdirectory structure for date
+    destination_folder = (f'{args.destination}/' +
+                          f'{working_date.strftime("%Y/%m/%d/")}')
+
+    os.makedirs(destination_folder, mode=0o775, exist_ok=True)
+
     # Convert the files
-    bulk_store(files, args.destination)
+    bulk_store(files, destination_folder)

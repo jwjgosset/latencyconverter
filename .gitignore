@@ -11,3 +11,6 @@ sampledata/test/
 # Exclude egg-info and build folders
 build/
 latencyconverter.egg-info/
+
+# Exclude the .venv folder
+.venv/

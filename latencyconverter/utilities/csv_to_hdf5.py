@@ -2,6 +2,7 @@ import pandas as pd
 from pandas.core.frame import DataFrame
 import h5py
 import datetime
+import logging
 
 
 def load_csv(
@@ -106,5 +107,9 @@ def store_csv(
     destination_dir: str
         The directory to store the compressed hdf5 files in.
     '''
+    file_name_parts = filename.split('/')
+    dest_file = f'{file_name_parts[len(file_name_parts) - 1]}.hdf5'
+
+    logging.debug(f'Loading {filename}')
     csvDF = load_csv(filename)
-    csv_to_h5py(f'{destination_dir}/{filename}.hdf5', csvDF)
+    csv_to_h5py(f'{destination_dir}/{dest_file}', csvDF)

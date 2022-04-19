@@ -27,7 +27,9 @@ def bulk_store(
         devices respectively.
     '''
     for filename in files:
-        if '.csv' in filename:
+        if 'TimingError' in filename:
+            logging.warning(f'Skipping file {filename}')
+        elif '.csv' in filename:
             store_csv(filename, destination)
         elif '.json' in filename:
             store_json(filename, destination)
